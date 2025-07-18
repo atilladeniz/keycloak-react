@@ -1,206 +1,236 @@
-# Next.js + Keycloak + Auth.js
+# 🔐 Next.js + Keycloak Authentication Starter
 
-Eine moderne Full-Stack-Authentifizierungslösung mit Next.js 15, Keycloak und Auth.js (NextAuth.js v5).
+A production-ready full-stack authentication solution with Next.js 15, Keycloak, and Auth.js (NextAuth.js v5).
 
-## 🚀 Features
+## ✨ Features
 
-- **Next.js 15** mit App Router
-- **Keycloak** als Identity Provider
-- **Auth.js** (NextAuth.js v5) für Session Management
-- **PostgreSQL** mit Drizzle ORM
-- **Terraform** für Infrastructure as Code
-- **Docker Compose** für lokale Entwicklung
-- **TypeScript** für Type Safety
-- **Tailwind CSS** für Styling
-- **Sicherer Logout** mit Server-seitiger Keycloak-Integration
+- 🚀 **Next.js 15** with App Router and Server Actions
+- 🔑 **Keycloak** as Enterprise Identity Provider
+- 🛡️ **Auth.js v5** for seamless session management
+- 🗄️ **PostgreSQL** with Drizzle ORM for type-safe database access
+- 🏗️ **Terraform** for automated Infrastructure as Code setup
+- 🐳 **Docker Compose** for consistent development environments
+- 📘 **TypeScript** for full type safety
+- 🎨 **Tailwind CSS** for modern UI design
+- 🔒 **Secure Logout** with server-side session termination
+- ⚡ **One-Click Setup** with automated installation script
 
-## 📋 Voraussetzungen
-
-- Node.js 18+
-- Docker & Docker Compose
-- Terraform (optional, für automatisches Keycloak-Setup)
-
-## 🛠️ Installation
-
-### 1. Repository klonen
+## 🚀 Quick Start
 
 ```bash
-git clone <repository-url>
+# Clone repository
+git clone https://github.com/yourusername/keycloak-react.git
 cd keycloak-react
-```
 
-### 2. Dependencies installieren
-
-```bash
+# Install dependencies
 npm install
-```
 
-### 3. Environment-Variablen einrichten
+# Automated setup (starts Docker, configures Keycloak, initializes DB)
+npm run setup
 
-```bash
-cp .env.example .env.local
-# Bearbeite .env.local mit deinen Werten
-```
-
-### 4. Services starten
-
-```bash
-# Starte Keycloak und PostgreSQL
-docker-compose up -d
-
-# Warte bis Keycloak bereit ist (ca. 30 Sekunden)
-
-# Hinweis: Docker-Dateien befinden sich im /docker Ordner
-```
-
-### 5. Keycloak konfigurieren
-
-**Option A: Mit Terraform (empfohlen)**
-
-```bash
-cd terraform
-terraform init
-terraform apply
-# Die Outputs enthalten alle benötigten Werte für .env.local
-```
-
-**Option B: Manuell**
-- Öffne http://localhost:8081/admin
-- Login: admin / admin
-- Erstelle Realm, Client und User manuell
-
-### 6. Datenbank initialisieren
-
-```bash
-# Migrations ausführen mit Drizzle
-npm run db:push
-
-# Oder für Production mit Migrations:
-npm run db:migrate
-```
-
-### 7. Entwicklungsserver starten
-
-```bash
+# Start development server
 npm run dev
 ```
 
-Die App ist jetzt unter http://localhost:3000 verfügbar!
+The app is now available at http://localhost:3000! 🎉
 
-## 🔐 Authentifizierung
+### Test Credentials
+- **Username:** `testuser`
+- **Password:** `Test1234!`
 
-### Login-Flow Konfiguration
+## 📋 Prerequisites
 
-Die App unterstützt zwei Login-Modi, die über `/src/config/auth.config.ts` konfiguriert werden:
+- Node.js 18+ 
+- Docker & Docker Compose
+- npm or pnpm
+- Terraform (will be installed automatically if not present)
 
-**Standard-Modus (`autoRedirectToKeycloak: false`):**
-1. Benutzer sieht die Login-Seite
-2. Klickt auf "Mit Keycloak anmelden"
-3. Weiterleitung zu Keycloak Login
-4. Nach erfolgreichem Login zurück zur App
+## 🛠️ Detailed Installation
 
-**Auto-Redirect-Modus (`autoRedirectToKeycloak: true`):**
-1. Benutzer wird automatisch zu Keycloak weitergeleitet
-2. Kein Zwischenschritt über die Login-Seite
-3. Nach erfolgreichem Login direkt zum Dashboard
+### 1. Environment Setup
 
-```typescript
-// src/config/auth.config.ts
-export const authConfig = {
-  autoRedirectToKeycloak: true, // Aktiviert direkten Keycloak-Login
-};
+```bash
+# Environment variables are created automatically during setup
+# Manual adjustments possible in .env.local
 ```
 
-### Logout-Flow
-- Sicherer Server-seitiger Logout
-- Beendet Sessions in beiden Systemen (App & Keycloak)
-- Keine sichtbare Weiterleitung zu Keycloak
+### 2. Services Management
 
-## 🏗️ Projektstruktur
+```bash
+# Start all services (Keycloak + PostgreSQL)
+docker-compose up -d
+
+# Stop services
+docker-compose down
+
+# Complete reset (including database)
+npm run auth:clean
+```
+
+### 3. Database
+
+```bash
+# Sync schema (Development)
+npm run db:push
+
+# Run migrations (Production)
+npm run db:migrate
+
+# Open database UI
+npm run db:studio
+```
+
+## 🏗️ Project Architecture
 
 ```
-src/
-├── app/                    # Next.js App Router
-│   ├── api/auth/          # Auth.js API Routes
-│   ├── dashboard/         # Geschützter Bereich
-│   └── login/            # Login-Seite
-├── components/           # React Komponenten
-│   └── auth/            # Auth-Komponenten
-├── lib/                 # Utilities
-│   └── db/             # Datenbank-Konfiguration
-├── types/              # TypeScript Definitionen
-└── auth.ts            # Auth.js Konfiguration
+keycloak-react/
+├── src/
+│   ├── app/                    # Next.js App Router Pages
+│   │   ├── (auth)/            # Authenticated routes
+│   │   ├── api/auth/          # Auth.js API endpoints
+│   │   ├── dashboard/         # Protected area
+│   │   └── login/             # Login UI
+│   ├── components/            # React components
+│   │   ├── auth/              # Auth-specific components
+│   │   └── ui/                # Reusable UI components
+│   ├── lib/                   # Utilities and configurations
+│   │   └── db/                # Database schema and connection
+│   ├── types/                 # TypeScript type definitions
+│   └── auth.ts                # Auth.js main configuration
+├── terraform/                  # Infrastructure as Code
+│   ├── main.tf                # Keycloak Realm & Client setup
+│   └── variables.tf           # Configurable parameters
+├── docker/                     # Docker configurations
+│   └── nginx/                 # Production reverse proxy
+├── scripts/                    # Automation scripts
+│   └── setup-auth.sh          # One-click setup script
+└── drizzle.config.ts          # Database configuration
+```
+
+## 🔐 Authentication Features
+
+### Session Management
+- JWT-based sessions with Auth.js
+- Automatic token refresh
+- Server-side session validation
+
+### Security
+- PKCE flow for OAuth 2.0
+- CSRF protection
+- Secure cookie handling
+- Content Security Policy headers
+
+### Keycloak Integration
+- Single Sign-On (SSO) ready
+- Multi-Factor Authentication support
+- User self-service (password reset, etc.)
+- Realm-based multi-tenancy
+
+## 📝 Available NPM Scripts
+
+```bash
+npm run dev          # Start development server with Turbopack
+npm run build        # Create production build
+npm run start        # Start production server
+npm run lint         # Code linting
+npm run typecheck    # TypeScript type checking
+npm run setup        # Automated setup of all services
+npm run auth:clean   # Complete authentication reset
+npm run db:push      # Sync database schema
+npm run db:migrate   # Production migrations
+npm run db:studio    # Open database GUI
 ```
 
 ## 🚢 Production Deployment
 
-```bash
-# Build für Production
-docker-compose -f docker/docker-compose.prod.yml up --build
-```
-
-Die App läuft dann auf Port 3000 mit integrierten Security Headers.
-
-## 📝 Verfügbare Scripts
+### With Docker
 
 ```bash
-npm run dev        # Entwicklungsserver
-npm run build      # Production Build
-npm run start      # Production Server
-npm run lint       # ESLint
-npm run typecheck  # TypeScript Check
-npm run db:push    # Datenbank-Schema synchronisieren (Dev)
-npm run db:migrate # Migrations ausführen (Production)
-npm run db:studio  # Drizzle Studio öffnen (DB Browser)
+# Production build with optimized settings
+docker build -f docker/Dockerfile.prod -t keycloak-react .
+
+# With Docker Compose
+docker-compose -f docker/docker-compose.prod.yml up -d
 ```
 
-## 🔧 Konfiguration
+### Environment Variables
 
-### Keycloak
-- Admin Console: http://localhost:8081/admin
+Important production settings:
+- `AUTH_URL` - Public URL of the app
+- `KEYCLOAK_URL` - Keycloak server URL
+- `DATABASE_URL` - PostgreSQL connection string
+- `AUTH_SECRET` - Generate with `openssl rand -base64 32`
+
+## 🔧 Configuration
+
+### Keycloak Admin
+- URL: http://localhost:8081/admin
+- Username: `admin`
+- Password: `admin`
 - Realm: `nextjs-app`
 - Client: `nextjs-client`
 
 ### PostgreSQL
-- Host: localhost
-- Port: 5433
+- Port: `5433` (to avoid conflicts)
+- User: `postgres`
+- Password: `password`
 - Databases:
-  - `keycloak_db` - Für Keycloak
-  - `nextjs_app` - Für die Next.js App (Auth.js)
-- User: postgres
-- Password: password
+  - `keycloak_db` - Keycloak metadata
+  - `nextjs_app` - Application data
 
 ## 🐛 Troubleshooting
 
-### Keycloak startet nicht
+### "Client not found" Error
 ```bash
-docker-compose logs keycloak
-# Prüfe auf Port-Konflikte
+# Rebuild Terraform state
+cd terraform
+terraform destroy -auto-approve
+terraform apply -auto-approve
+```
+
+### Docker Container Won't Start
+```bash
+# Check logs
+docker-compose logs -f keycloak
+
+# Check ports
+lsof -i :8081
+lsof -i :5433
 ```
 
 ### Database Connection Error
 ```bash
-# Prüfe ob PostgreSQL läuft
+# PostgreSQL status
 docker-compose ps
-# Prüfe Verbindung
-psql -h localhost -p 5433 -U postgres -d keycloak_react
+
+# Test connection
+docker exec -it keycloak-postgres psql -U postgres
 ```
 
-### Session wird nicht gespeichert
-- Prüfe AUTH_SECRET in .env.local
-- Stelle sicher, dass die Auth.js Tabellen existieren
+## 📚 Further Documentation
 
-## 📚 Weitere Dokumentation
-
-- [CLAUDE.md](./CLAUDE.md) - Projekt-Konventionen
-- [terraform/README.md](./terraform/README.md) - Terraform Setup
-- [Auth.js Docs](https://authjs.dev)
-- [Keycloak Docs](https://www.keycloak.org/documentation)
+- [CLAUDE.md](./CLAUDE.md) - Project conventions and AI instructions
+- [Auth.js Documentation](https://authjs.dev)
+- [Keycloak Documentation](https://www.keycloak.org/documentation)
+- [Drizzle ORM](https://orm.drizzle.team)
 
 ## 🤝 Contributing
 
-Pull Requests sind willkommen! Bitte beachte die Coding-Standards in CLAUDE.md.
+Contributions are welcome! Please:
 
-## 📄 Lizenz
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-MIT
+## 📄 License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+## 🙏 Acknowledgments
+
+- [Vercel](https://vercel.com) for Next.js
+- [Keycloak](https://www.keycloak.org) Team
+- [Auth.js](https://authjs.dev) Contributors
+- [Drizzle Team](https://orm.drizzle.team) for the amazing ORM
