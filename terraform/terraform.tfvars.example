@@ -1,0 +1,14 @@
+# Keycloak Konfiguration
+keycloak_url            = "http://127.0.0.1:8080"
+keycloak_admin_username = "admin"
+keycloak_admin_password = "admin"
+
+# Realm Konfiguration
+realm_name = "nextjs-app"
+
+# Client Konfiguration
+client_id = "nextjs-app"
+app_url   = "http://localhost:3000"
+
+# Test User
+create_test_user = true

@@ -1,0 +1,11 @@
+# dotenvx configuration
+
+# Encryption key for production
+# Generate with: npx dotenvx encrypt
+DOTENVX_KEY=
+
+# Environment files
+environments:
+  - .env
+  - .env.local
+  - .env.production
