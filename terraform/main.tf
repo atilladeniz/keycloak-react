@@ -92,9 +92,9 @@ resource "keycloak_openid_client" "nextjs_client" {
     "frontchannel.logout.session.required" = "false"
   }
 
-  authentication_flow_binding_overrides {
-    browser_id = keycloak_authentication_flow.browser_flow.id
-  }
+  # authentication_flow_binding_overrides {
+  #   browser_id = keycloak_authentication_flow.browser_flow.id
+  # }
 }
 
 # Client Secret ausgeben
@@ -123,12 +123,12 @@ resource "keycloak_openid_client_optional_scopes" "nextjs_client_optional_scopes
   ]
 }
 
-# Browser Flow für bessere Sicherheit
-resource "keycloak_authentication_flow" "browser_flow" {
-  realm_id    = keycloak_realm.nextjs_realm.id
-  alias       = "browser-with-otp"
-  description = "Browser flow with conditional OTP"
-}
+# Browser Flow für bessere Sicherheit - DEAKTIVIERT weil es Probleme verursacht
+# resource "keycloak_authentication_flow" "browser_flow" {
+#   realm_id    = keycloak_realm.nextjs_realm.id
+#   alias       = "browser-with-otp"
+#   description = "Browser flow with conditional OTP"
+# }
 
 # Beispiel-Benutzer (nur für Development)
 resource "keycloak_user" "test_user" {

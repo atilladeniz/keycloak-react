@@ -11,7 +11,10 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "drizzle-kit migrate",
     "db:push": "drizzle-kit push",
-    "db:studio": "drizzle-kit studio"
+    "db:studio": "drizzle-kit studio",
+    "auth:setup": "./scripts/setup-auth.sh",
+    "auth:clean": "cd terraform && terraform destroy -auto-approve && cd .. && docker-compose down -v",
+    "setup": "npm run auth:setup"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.10.0",
